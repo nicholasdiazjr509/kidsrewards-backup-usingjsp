@@ -25,8 +25,11 @@ public class Task {
     @Column(nullable = false)
     private long due_date;
 
-    @ManyToOne
-    @JoinColumn (name = "user_id")
+//    @ManyToOne
+//    @JoinColumn (nullable = false, name = "user_id")
+//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @ManyToOne
