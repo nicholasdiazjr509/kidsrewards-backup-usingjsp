@@ -81,6 +81,11 @@ public Task(String icon, String title, String description, long points) {
     this.description = description;
     this.points = points;
 }
+
+public Task(String title, long id){
+        this.title = title;
+        this.id = id;
+}
     public long getId() {
         return id;
     }

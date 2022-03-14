@@ -64,15 +64,21 @@ public class TaskController {
 
     @GetMapping("/tasks/{id}/edit")
     public String showEditRewardForm(@PathVariable long id, Model model) {
-        model.addAttribute("rewardToEdit", taskDao.getById(id));
-        return "tasks/edit";
+        Task tasktoEdit = taskDao.getById(id);
+        User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(tasktoEdit.getUser().getId() == loggedInUser.getId()) {
+            model.addAttribute("rewardToEdit", taskDao.getById(id));
+            return "tasks/edit";
+        }else{
+            return "redirect:/tasks";
+        }
     }
 
     @PostMapping("/tasks/{id}/edit")
     public String submitRewardToEdit(@ModelAttribute Task taskToEdit, @PathVariable long id) {
         taskToEdit.setUser(usersDao.getById(1L));
         taskDao.save(taskToEdit);
-        return "redirect:/tasks/" + id;
+        return "redirect:/tasks/";
     }
 
     @GetMapping("/tasks/{id}/delete")
@@ -80,8 +86,6 @@ public class TaskController {
         taskDao.deleteById(id);
         return "redirect:/tasks";
     }
-
-}
 
 //    @GetMapping("/tasks")
 //    public String showTasks(Model model) {
@@ -94,27 +98,27 @@ public class TaskController {
 //  _____________ Status ____________//
 
 
-//
-//@GetMapping("/statuses/{id}/edit")
-//public String showEditStatus(@PathVariable long id, Model model) {
-//    Status statusToEdit = statusDao.getById(id);
-//    User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//    if (statusToEdit.getUser().getId() == loggedInUser.getId()) {
-//        model.addAttribute("statusToEdit", statusToEdit);
-//        return "statuses/edit";
-//    } else {
-//        return "redirect:/status";//?? or redirect tasks??
-//    }
-//}
-//    //to show the edit of status?
-//    @PostMapping("/statuses/{id}/edit")
-//    public String submitEdit(@ModelAttribute Status statusToEdit, @PathVariable long id) {
-//        if (statusDao.getById(id).getUser().getId() == ((User) SecurityContextHolder.getContext()
-//                .getAuthentication().getPrincipal()).getId()) {
-//            statusToEdit.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-//
-//            statusDao.save(statusToEdit);
-//        }
-//        return "redirect:/status";
-//    }
-//}
+
+@GetMapping("/status/{id}/edit")
+public String showEditStatus(@PathVariable long id, Model model) {
+    Status statusToEdit = statusDao.getById(id);
+    User loggedInUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    if (statusToEdit.getUser().getId() == loggedInUser.getId()) {
+        model.addAttribute("statusToEdit", statusToEdit);
+        return "status/edit";
+    } else {
+        return "redirect:/status";//?? or redirect tasks??
+    }
+}
+    //to show the edit of status?
+    @PostMapping("/statuses/{id}/edit")
+    public String submitEdit(@ModelAttribute Status statusToEdit, @PathVariable long id) {
+        if (statusDao.getById(id).getUser().getId() == ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getId()) {
+            statusToEdit.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+            statusDao.save(statusToEdit);
+        }
+        return "redirect:/status";
+    }
+}

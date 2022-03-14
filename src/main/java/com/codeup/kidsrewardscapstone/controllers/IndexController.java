@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.annotation.SessionScope;
 
 @Controller
-@SessionScope
 public class IndexController {
-    @GetMapping("/")
+    @GetMapping("/index")
     public String index() {
-        return "index";
+        return "resources/index.html";
     }
 }
